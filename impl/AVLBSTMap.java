@@ -98,6 +98,7 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
         * in our case three bits will be plenty.
         */
        protected int balance;
+       
         /**
          * Fix this subtree to conform to the constraints of
          * AVL trees. 
@@ -111,10 +112,29 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
          * @return The root of the tree like this one but
          * satisfying the constraints.
          */
-       public AVLNode<K,V> putFixup() {
-           AVLRealNode replace = this;
-           throw new UnsupportedOperationException(); // return replace;
-        }
+		public AVLNode<K, V> putFixup() {
+			AVLRealNode replace = this;
+
+			int leftHeight = this.left().height();
+			int rightHeight = this.right().height();
+			
+			//Check if the balance of the current node is balanced
+			if(Math.abs(balance) <= 1)
+				return replace;
+			
+			//Check if the balance is less than -1, triggering a right rotation
+			else if(balance < -1) {
+				//Check if a right rotation is needed, and/or if a right right rotation is needed.
+			}
+			
+			//Check if balance is greater than one, triggering a left rotation
+			else if(balance > 1) {
+				//Do something analogous but mirror-imaged as balance < -1 
+			}
+			
+			
+			return replace;
+		}
        
 
        /**
