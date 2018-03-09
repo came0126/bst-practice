@@ -138,8 +138,11 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
 					oldRight.left = subtree;
 					newRight.right = oldRight;
 					replace.right = newRight;
-
+					//The right and right.right subtree's height attributes have changed. They need recomputing.
+					right.right().recompute();
+					right.recompute();
 				}
+				
 				
 				//right-right rotation
 				if(replace.right.right().height() > replace.right.left().height()) {
@@ -157,7 +160,7 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
 			else if(balance > 1) {
 				
 				//left-right rotation
-				if(replace.left.left().height() < replace.left.right().height()) {			
+				if(replace.left.left().height() < replace.left.right().height()) {		
 					AVLRealNode newLeft = (AVLBSTMap<K, V>.AVLRealNode) replace.left.right();
 					//The subtree that could exist
 					AVLNode subtree = newLeft.left;
@@ -165,7 +168,9 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
 					oldLeft.right = subtree;
 					newLeft.left = oldLeft;
 					replace.left = newLeft;
-
+					//The left and left.left subtree's height attributes have changed. They need recomputing.
+					left.left().recompute();
+					left.recompute();
 				}
 				
 				//right-right rotation
