@@ -1,5 +1,7 @@
 package impl;
 
+import impl.AVLBSTMap.AVLNode;
+
 /**
  * AVLBSTMap
  * 
@@ -115,8 +117,8 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
 		public AVLNode<K, V> putFixup() {
 			AVLRealNode replace = this;
 
-			int leftHeight = this.left().height();
-			int rightHeight = this.right().height();
+			assert(Math.abs(left.balance()) <= 1);
+			assert(Math.abs(right.balance()) <= 1);
 			
 			//Check if the balance of the current node is balanced
 			if(Math.abs(balance) <= 1)
@@ -124,12 +126,52 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
 			
 			//Check if the balance is less than -1, triggering a right rotation
 			else if(balance < -1) {
-				//Check if a right rotation is needed, and/or if a right right rotation is needed.
+				
+				//right-left rotation
+				if(right.right().height() < right.left().height()) {			
+					AVLRealNode newRight = (AVLBSTMap<K, V>.AVLRealNode) right.left();
+					AVLNode subtree = newRight.right;
+					AVLRealNode oldRight = (AVLBSTMap<K, V>.AVLRealNode) right;
+					oldRight.left = subtree;
+					newRight.right = oldRight;
+					replace.right = newRight;
+					recompute();
+				}
+				
+				//right-right rotation
+				if(right.right().height() > right.left().height()) {
+					AVLRealNode oldReplace = replace; 
+					replace = (AVLBSTMap<K, V>.AVLRealNode) oldReplace.right;
+			        AVLNode<K, V> subtree = replace.left;
+			        oldReplace.right = subtree;
+			        replace.left = oldReplace;
+			        recompute();
+				}
 			}
 			
 			//Check if balance is greater than one, triggering a left rotation
 			else if(balance > 1) {
-				//Do something analogous but mirror-imaged as balance < -1 
+				
+				//left-right rotation
+				if(left.left().height() < left.right().height()) {			
+					AVLRealNode newLeft = (AVLBSTMap<K, V>.AVLRealNode) left.right();
+					AVLNode subtree = newLeft.left;
+					AVLRealNode oldLeft = (AVLBSTMap<K, V>.AVLRealNode) left;
+					oldLeft.right = subtree;
+					newLeft.left = oldLeft;
+					replace.left = newLeft;
+					recompute();
+				}
+				
+				//right-right rotation
+				if(left.left().height() > left.right().height()) {
+					AVLRealNode oldReplace = replace; 
+					replace = (AVLBSTMap<K, V>.AVLRealNode) oldReplace.left;
+			        AVLNode<K, V> subtree = replace.right;
+			        oldReplace.right = subtree;
+			        replace.right = oldReplace;
+			        recompute();
+				}
 			}
 			
 			
