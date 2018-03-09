@@ -115,11 +115,12 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
          * satisfying the constraints.
          */
 		public AVLNode<K, V> putFixup() {
+			//Recompute values
+			recompute();
+			
+			//The node to be returned. The new root after rotation.
 			AVLRealNode replace = this;
 
-			assert(Math.abs(left.balance()) <= 1);
-			assert(Math.abs(right.balance()) <= 1);
-			
 			//Check if the balance of the current node is balanced
 			if(Math.abs(balance) <= 1)
 				return replace;
@@ -128,20 +129,23 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
 			else if(balance < -1) {
 				
 				//right-left rotation
-				if(right.right().height() < right.left().height()) {			
-					AVLRealNode newRight = (AVLBSTMap<K, V>.AVLRealNode) right.left();
+				if(replace.right.right().height() < replace.right.left().height()) {
+					//Rotation process
+					AVLRealNode newRight = (AVLBSTMap<K, V>.AVLRealNode) replace.right.left();
+					//The subtree that could exist
 					AVLNode subtree = newRight.right;
-					AVLRealNode oldRight = (AVLBSTMap<K, V>.AVLRealNode) right;
+					AVLRealNode oldRight = (AVLBSTMap<K, V>.AVLRealNode) replace.right;
 					oldRight.left = subtree;
 					newRight.right = oldRight;
 					replace.right = newRight;
-					recompute();
+
 				}
 				
 				//right-right rotation
-				if(right.right().height() > right.left().height()) {
+				if(replace.right.right().height() > replace.right.left().height()) {
 					AVLRealNode oldReplace = replace; 
 					replace = (AVLBSTMap<K, V>.AVLRealNode) oldReplace.right;
+					//The subtree that could exist
 			        AVLNode<K, V> subtree = replace.left;
 			        oldReplace.right = subtree;
 			        replace.left = oldReplace;
@@ -153,27 +157,28 @@ public class AVLBSTMap<K extends Comparable<K>, V> extends RecursiveBSTMap<K, V,
 			else if(balance > 1) {
 				
 				//left-right rotation
-				if(left.left().height() < left.right().height()) {			
-					AVLRealNode newLeft = (AVLBSTMap<K, V>.AVLRealNode) left.right();
+				if(replace.left.left().height() < replace.left.right().height()) {			
+					AVLRealNode newLeft = (AVLBSTMap<K, V>.AVLRealNode) replace.left.right();
+					//The subtree that could exist
 					AVLNode subtree = newLeft.left;
-					AVLRealNode oldLeft = (AVLBSTMap<K, V>.AVLRealNode) left;
+					AVLRealNode oldLeft = (AVLBSTMap<K, V>.AVLRealNode) replace.left;
 					oldLeft.right = subtree;
 					newLeft.left = oldLeft;
 					replace.left = newLeft;
-					recompute();
+
 				}
 				
 				//right-right rotation
-				if(left.left().height() > left.right().height()) {
+				if(replace.left.left().height() > replace.left.right().height()) {
 					AVLRealNode oldReplace = replace; 
 					replace = (AVLBSTMap<K, V>.AVLRealNode) oldReplace.left;
+					//The subtree that could exist
 			        AVLNode<K, V> subtree = replace.right;
-			        oldReplace.right = subtree;
+			        oldReplace.left = subtree;
 			        replace.right = oldReplace;
 			        recompute();
 				}
 			}
-			
 			
 			return replace;
 		}
