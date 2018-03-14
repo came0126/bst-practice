@@ -51,20 +51,72 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
         public RBNode<K, V> putFixup() {
         	this.recomputeBlackHeight();
         	
-        	RBNode<K,V> toReturn = this;
+        	RBNode<K,V> replace = this;
         	
         	//If this is black then check LR, LL, RL, or RR double red violations
-        	if(!this.isRed()) {
+        	if(!replace.isRed()) {
         		
         		//handle RL
+        		if(right.isRed() && right.left().isRed()) {
+        			this.right = ((TradRBRealNode) right).rotateRight();
+        			replace = this;
+        		}
+
         		//handle LR
-        		//handle RR
-        		//handle LL
+        		else if(left.isRed() && left.right().isRed()) {
+        			this.left = ((TradRBRealNode) left).rotateRight();
+        			replace = this;
+        		}
         		
+        		//handle RR
+        		if(right.isRed() && right.right().isRed()) {
+        			
+        			//Checking if red uncle exists
+        			if(left.isRed()) {
+        				//Recolor and recalculate
+        				replace.redden();
+            			right.blacken();
+            			left.blacken();
+            			left.recomputeBlackHeight();
+            			right.recomputeBlackHeight();
+        			}
+        			
+        			//Red uncle doesn't exist so rotate
+        			else {
+        				//Recolor
+        				replace.redden();
+        				replace.right().blacken();
+        				replace = rotateLeft();
+        			}
+        			
+        			
+        		}
+        		
+        		//handle LL
+        		else if(left.isRed() && left.left().isRed()) {
+        			
+        			//Checking if red uncle exists
+        			if(right.isRed()) {
+        				//Recolor and recalculate
+        				replace.redden();
+            			left.blacken();
+            			right.blacken();
+            			right.recomputeBlackHeight();
+            			left.recomputeBlackHeight();
+        			}
+        			
+        			//Red uncle doesn't exist so rotate
+        			else {
+        				//Recolor
+        				replace.redden();
+        				replace.left().blacken();
+        				replace = rotateRight();
+        			}
+        		
+        		}
         	}
         	
-        	
-        	return toReturn;
+        	return replace;
         	
         }
 
@@ -73,7 +125,15 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
          * @return The node that is newly the root
          */
         private RBNode<K, V> rotateLeft() {
-        	RBNode<K,V> toReturn = this;
+        	TradRBRealNode replace = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) this.right;
+        	
+        	TradRBRealNode newLeft = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) this;
+        	//Give newLeft the potental subtree at replace's left
+        	newLeft.right = replace.left;
+        	
+			replace.left = newLeft;
+			//The right subtree's black height attributes may have changed
+			right.recomputeBlackHeight();
         	return this;
         }
 
@@ -82,7 +142,16 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
          * @return The node that is newly the root
          */
         private RBNode<K, V> rotateRight() {
-        	RBNode<K,V> toReturn = this;
+        	TradRBRealNode replace = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) this.left;
+        	
+        	TradRBRealNode newRight = (TraditionalRedBlackTreeMap<K, V>.TradRBRealNode) this;
+        	//Give newRight the potental subtree at replace's right
+        	newRight.left = replace.right;
+        	
+			replace.right = newRight;
+			//The left subtree's black height attributes may have changed
+			right.recomputeBlackHeight();
+        	
         	return this;
         }
 
