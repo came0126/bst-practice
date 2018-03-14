@@ -49,19 +49,32 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
          * satisfying the constraints.
          */
         public RBNode<K, V> putFixup() {
-             throw new UnsupportedOperationException();
+        	this.recomputeBlackHeight();
+        	
+        	RBNode<K,V> toReturn = this;
+        	
+        	//If this is black then check LR, LL, RL, or RR double red violations
+        	if(!this.isRed()) {
+        		
+        		//handle RL
+        		//handle LR
+        		//handle RR
+        		//handle LL
+        		
+        	}
+        	
+        	
+        	return toReturn;
+        	
         }
-        // ------------------------------------------------
-        // The following two methods are suggested helper methods
-        // (which you would have to write) for fixup()
-        // -----------------------------------------------
 
         /**
          * Rotate this tree to the left.
          * @return The node that is newly the root
          */
         private RBNode<K, V> rotateLeft() {
-             throw new UnsupportedOperationException();
+        	RBNode<K,V> toReturn = this;
+        	return this;
         }
 
         /**
@@ -69,7 +82,8 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
          * @return The node that is newly the root
          */
         private RBNode<K, V> rotateRight() {
-             throw new UnsupportedOperationException();
+        	RBNode<K,V> toReturn = this;
+        	return this;
         }
 
     }
