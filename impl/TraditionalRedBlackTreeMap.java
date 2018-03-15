@@ -64,7 +64,7 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
 
         		//handle LR
         		else if(left.isRed() && left.right().isRed()) {
-        			this.left = ((TradRBRealNode) left).rotateRight();
+        			this.left = ((TradRBRealNode) left).rotateLeft();
         			replace = this;
         		}
         		
@@ -83,10 +83,15 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
         			
         			//Red uncle doesn't exist so rotate
         			else {
-        				//Recolor
-        				replace.redden();
-        				replace.right().blacken();
+        				//Rotate
         				replace = rotateLeft();
+        				//Recolor
+        				replace.blacken();
+        				replace.left().redden();
+        				//Recompute
+        				replace.left().recomputeBlackHeight();
+        				replace.recomputeBlackHeight();
+        				
         			}
         			
         			
@@ -107,10 +112,15 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
         			
         			//Red uncle doesn't exist so rotate
         			else {
-        				//Recolor
-        				replace.redden();
-        				replace.left().blacken();
+        				//Rotate
         				replace = rotateRight();
+        				//Recolor
+        				replace.blacken();
+        				replace.right().redden();
+        				//Recompute
+        				replace.right().recomputeBlackHeight();
+        				replace.recomputeBlackHeight();
+        				
         			}
         		
         		}
@@ -134,7 +144,7 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
 			replace.left = newLeft;
 			//The right subtree's black height attributes may have changed
 			right.recomputeBlackHeight();
-        	return this;
+        	return replace;
         }
 
         /**
@@ -152,7 +162,7 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
 			//The left subtree's black height attributes may have changed
 			right.recomputeBlackHeight();
         	
-        	return this;
+        	return replace;
         }
 
     }
