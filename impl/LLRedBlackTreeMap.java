@@ -1,5 +1,6 @@
 package impl;
 
+import impl.RedBlackTreeMap.RBNode;
 
 /**
  * LLRedBlackTreeMap
@@ -65,26 +66,67 @@ public class LLRedBlackTreeMap<K extends Comparable<K>, V> extends RedBlackTreeM
          * satisfying the constraints.
          */
         public RBNode<K, V> putFixup() {
-             throw new UnsupportedOperationException();
-                
+
+			RBNode<K, V> replace = this;
+
+			// Left node and right node are both red -> right-red violation
+			if(left.isRed() && right.isRed()) {
+				replace.left().blacken();
+				replace.right().blacken();
+				replace.redden();
+				//Recompute black heights
+				replace.left().recomputeBlackHeight();
+				replace.right().recomputeBlackHeight();
+				replace.recomputeBlackHeight();
+			}
+
+			// Right node is only red -> right-red violation
+			else if(right.isRed()) {
+				replace = rotateLeft();
+				
+				//Temp to hold color of root
+				boolean leftIsRed = replace.left().isRed();
+				//Redden root
+				replace.left().redden();
+				//Swap colors
+				if(leftIsRed)
+					replace.redden();
+				else
+					replace.blacken();
+				//Rotate left on root
+				replace.left().recomputeBlackHeight();
+				
+				replace.recomputeBlackHeight();
+			}
+
+			// Left node and left.left node is also red -> double-red violation
+			else if(left.isRed() && left.left().isRed()) {
+				//Rotate right on root
+				replace = rotateRight();
+				replace.left().blacken();
+				replace.left().recomputeBlackHeight();
+				
+			}
+
+			// What if there are no violations?
+			return replace;
         }        
 
-        
-        
-        // ------------------------------------------------
-        // The following two methods are suggested helper methods
-        // (which you would have to write) for fixup().
-        // These will be (nearly) identical to those you write
-        // for traditional RB trees, the only difference being
-        // the types of the nodes.
-        // -----------------------------------------------
-       
         /**
          * Rotate this tree to the left.
          * @return The node that is the new root
          */
         private RBNode<K, V> rotateLeft() {
-             throw new UnsupportedOperationException();
+        	LLRBRealNode replace = (LLRedBlackTreeMap<K, V>.LLRBRealNode) this.right;
+
+        	LLRBRealNode newLeft = this;
+			// Give newLeft the potental subtree at replace's left
+			newLeft.right = replace.left;
+
+			replace.left = newLeft;
+			// The right subtree's black height attributes may have changed
+			right.recomputeBlackHeight();
+			return replace;
         }
         
         /**
@@ -92,7 +134,17 @@ public class LLRedBlackTreeMap<K extends Comparable<K>, V> extends RedBlackTreeM
          * @return The node that is the new root
          */
        private RBNode<K, V> rotateRight() {
-            throw new UnsupportedOperationException();
+			LLRBRealNode replace = (LLRedBlackTreeMap<K, V>.LLRBRealNode) this.left;
+
+			LLRBRealNode newRight = this;
+			// Give newRight the potental subtree at replace's right
+			newRight.left = replace.right;
+
+			replace.right = newRight;
+			// The left subtree's black height attributes may have changed
+			right.recomputeBlackHeight();
+
+			return replace;
         }
    }
    
