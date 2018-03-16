@@ -49,7 +49,6 @@ public class TraditionalRedBlackTreeMap<K extends Comparable<K>, V> extends RedB
          * satisfying the constraints.
          */
         public RBNode<K, V> putFixup() {
-        	this.recomputeBlackHeight();
         	
         	RBNode<K,V> replace = this;
         	
