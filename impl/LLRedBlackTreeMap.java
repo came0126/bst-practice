@@ -77,7 +77,6 @@ public class LLRedBlackTreeMap<K extends Comparable<K>, V> extends RedBlackTreeM
 				//Recompute black heights
 				replace.left().recomputeBlackHeight();
 				replace.right().recomputeBlackHeight();
-				replace.recomputeBlackHeight();
 			}
 
 			// Right node is only red -> right-red violation
@@ -95,8 +94,6 @@ public class LLRedBlackTreeMap<K extends Comparable<K>, V> extends RedBlackTreeM
 					replace.blacken();
 				//Rotate left on root
 				replace.left().recomputeBlackHeight();
-				
-				replace.recomputeBlackHeight();
 			}
 
 			// Left node and left.left node is also red -> double-red violation
@@ -105,10 +102,10 @@ public class LLRedBlackTreeMap<K extends Comparable<K>, V> extends RedBlackTreeM
 				replace = rotateRight();
 				replace.left().blacken();
 				replace.left().recomputeBlackHeight();
-				
 			}
 
-			// What if there are no violations?
+			// Recompute black height for replace
+			replace.recomputeBlackHeight();
 			return replace;
         }        
 
