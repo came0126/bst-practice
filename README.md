@@ -1,5 +1,5 @@
-# bst_practice
-Exploring 3 types of balanced binary search trees- AVL, Red-Black, and Left Leaning Read-Black.
+# Review of Self-Balancing Binary Search Trees
+Exploring 3 types of self-balancing binary search trees- AVL, Red-Black, and Left Leaning Read-Black.
 
 
 
